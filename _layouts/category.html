@@ -1,0 +1,43 @@
+---
+layout: default
+---
+
+<div class="cat-header">
+  <div class="container">
+    <span class="cat-header__accent" style="background: {{ page.cat_color }}"></span>
+    <h1 class="cat-header__title">{{ page.cat_label }}</h1>
+    <p class="cat-header__desc">{{ page.cat_desc }}</p>
+  </div>
+</div>
+
+<div class="posts-section">
+  <div class="container">
+    {% assign cat_posts = site.posts | where: "category", page.cat_slug %}
+    <div class="posts-section__header">
+      <span class="posts-section__title">{{ page.cat_label }}</span>
+      <span class="posts-section__count">{{ cat_posts.size }} articles</span>
+    </div>
+    <div class="posts-grid">
+      {% for post in cat_posts %}
+      <article class="post-card">
+        <div class="post-card__meta">
+          <span class="badge badge--{{ post.category }}">{{ post.category }}</span>
+          <time class="post-card__date">{{ post.date | date: "%b %d, %Y" }}</time>
+        </div>
+        <h2 class="post-card__title"><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
+        {% if post.excerpt %}
+        <p class="post-card__excerpt">{{ post.excerpt | strip_html }}</p>
+        {% endif %}
+        <div class="post-card__footer">
+          <span class="post-card__read">{{ post.content | number_of_words | divided_by: 200 | plus: 1 }} min read</span>
+        </div>
+      </article>
+      {% endfor %}
+      {% if cat_posts.size == 0 %}
+      <div class="post-card">
+        <p style="color: var(--ink-muted); font-size: 0.9rem;">No articles yet in this category.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

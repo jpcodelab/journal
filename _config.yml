@@ -1,0 +1,50 @@
+title: "jpcodelab/journal"
+description: "Notes, reflections, and articles by José Pedro — personal, professional, and everything in between."
+author: "José Pedro"
+email: ""
+url: "https://jpcodelab.github.io"
+baseurl: "/journal"
+
+# Build
+markdown: kramdown
+highlighter: rouge
+permalink: /articles/:year/:month/:day/:title/
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+# Collections
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+
+# Exclude from build
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+
+# Categories
+categories:
+  personal:
+    label: "Personal"
+    color: "#C17B5C"
+    description: "Stories, experiences, and personal reflections"
+  reflection:
+    label: "Reflection"
+    color: "#5C7BC1"
+    description: "Thinking out loud about technology, society, and change"
+  professional:
+    label: "Professional"
+    color: "#5C9C7B"
+    description: "ITSM, AIOps, enterprise architecture, and industry insights"
+  archive:
+    label: "Archive"
+    color: "#8A8A8A"
+    description: "Posts originally published elsewhere"

@@ -1,0 +1,88 @@
+---
+layout: default
+title: Home
+---
+
+<div class="hero">
+  <div class="container">
+    <p class="hero__eyebrow">jpcodelab / journal</p>
+    <h1 class="hero__title">Notes, reflections, <em>and things worth writing down</em></h1>
+    <p class="hero__desc">A personal space for articles that don't quite fit anywhere else — from project experiences to professional insights, from parenting to technology.</p>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" data-cat="all" onclick="filterPosts('all', this)">All</button>
+      <button class="filter-btn" data-cat="personal" onclick="filterPosts('personal', this)">Personal</button>
+      <button class="filter-btn" data-cat="reflection" onclick="filterPosts('reflection', this)">Reflection</button>
+      <button class="filter-btn" data-cat="professional" onclick="filterPosts('professional', this)">Professional</button>
+      <button class="filter-btn" data-cat="archive" onclick="filterPosts('archive', this)">Archive</button>
+    </div>
+  </div>
+</div>
+
+<div class="posts-section">
+  <div class="container">
+    <div class="posts-section__header">
+      <span class="posts-section__title" id="section-label">All articles</span>
+      <span class="posts-section__count" id="post-count">{{ site.posts.size }} articles</span>
+    </div>
+    <div class="posts-grid" id="posts-grid">
+      {% for post in site.posts %}
+      <article class="post-card{% if forloop.first %} post-card--featured{% endif %}" data-category="{{ post.category }}">
+        {% if forloop.first %}
+        <span class="post-card__label">Latest</span>
+        <div class="post-card__content">
+        {% endif %}
+          <div class="post-card__meta">
+            <span class="badge badge--{{ post.category }}">{{ post.category }}</span>
+            <time class="post-card__date">{{ post.date | date: "%b %d, %Y" }}</time>
+          </div>
+          <h2 class="post-card__title"><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
+          {% if post.subtitle %}
+          <p class="post-card__excerpt">{{ post.subtitle }}</p>
+          {% elsif post.excerpt %}
+          <p class="post-card__excerpt">{{ post.excerpt | strip_html | truncate: 160 }}</p>
+          {% endif %}
+          <div class="post-card__footer">
+            <span class="post-card__read">{{ post.content | number_of_words | divided_by: 200 | plus: 1 }} min read</span>
+          </div>
+        {% if forloop.first %}
+        </div>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+function filterPosts(cat, btn) {
+  // Update buttons
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // Filter cards
+  const cards = document.querySelectorAll('.post-card');
+  let visible = 0;
+  cards.forEach(card => {
+    const match = cat === 'all' || card.dataset.category === cat;
+    card.style.display = match ? '' : 'none';
+    if (match) visible++;
+  });
+
+  // Handle featured class on first visible
+  let firstFound = false;
+  cards.forEach(card => {
+    if (card.style.display !== 'none' && !firstFound) {
+      card.classList.add('post-card--featured');
+      firstFound = true;
+    } else {
+      card.classList.remove('post-card--featured');
+    }
+  });
+
+  // Update label
+  const labels = { all: 'All articles', personal: 'Personal', reflection: 'Reflection', professional: 'Professional', archive: 'Archive' };
+  document.getElementById('section-label').textContent = labels[cat] || 'Articles';
+  document.getElementById('post-count').textContent = visible + ' article' + (visible !== 1 ? 's' : '');
+}
+</script>
